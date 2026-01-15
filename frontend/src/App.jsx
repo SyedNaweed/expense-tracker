@@ -494,6 +494,33 @@ function App() {
           </div>
         )}
 
+        
+
+        {/* Expenses */}
+        <div style={styles.card}>
+          <h3 style={styles.sectionTitle}>Expenses</h3>
+          {expenses.map((e) => (
+            <div key={e.id} style={styles.expenseRow}>
+              <span>
+                {e.date} — <b>{e.description}</b> — {e.category} — ₹{e.amount}
+              </span>
+              <div>
+                <button
+                  style={styles.button}
+                  onClick={() => handleEdit(e)}
+                >
+                  Edit
+                </button>
+                <button
+                  style={styles.button}
+                  onClick={() => handleDelete(e.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
         {/* Chart */}
         {summary && summary.byCategory.length > 0 && (
           <div style={styles.card}>
@@ -521,32 +548,6 @@ function App() {
             </div>
           </div>
         )}
-
-        {/* Expenses */}
-        <div style={styles.card}>
-          <h3 style={styles.sectionTitle}>Expenses</h3>
-          {expenses.map((e) => (
-            <div key={e.id} style={styles.expenseRow}>
-              <span>
-                {e.date} — <b>{e.description}</b> — {e.category} — ₹{e.amount}
-              </span>
-              <div>
-                <button
-                  style={styles.button}
-                  onClick={() => handleEdit(e)}
-                >
-                  Edit
-                </button>
-                <button
-                  style={styles.button}
-                  onClick={() => handleDelete(e.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
