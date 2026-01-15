@@ -16,6 +16,7 @@
 
 // function App() {
 //   const [expenses, setExpenses] = useState([]);
+//   const [summary, setSummary] = useState(null);
 
 //   const [form, setForm] = useState({
 //     amount: "",
@@ -26,11 +27,11 @@
 
 //   const [editingId, setEditingId] = useState(null);
 
-//   // 🔹 Filters
+//   // Filters
 //   const [filterCategory, setFilterCategory] = useState("All");
 //   const [filterMonth, setFilterMonth] = useState("");
 
-//   // Fetch expenses with filters
+//   // Fetch expenses (with filters)
 //   const fetchExpenses = async () => {
 //     let url = API_URL;
 //     const params = [];
@@ -38,7 +39,6 @@
 //     if (filterCategory !== "All") {
 //       params.push(`category=${filterCategory}`);
 //     }
-
 //     if (filterMonth) {
 //       params.push(`month=${filterMonth}`);
 //     }
@@ -51,16 +51,29 @@
 //     setExpenses(res.data.expenses);
 //   };
 
+//   // Fetch summary
+//   const fetchSummary = async () => {
+//     if (!filterMonth) {
+//       setSummary(null);
+//       return;
+//     }
+
+//     const res = await axios.get(
+//       `${API_URL}/summary?month=${filterMonth}`
+//     );
+//     setSummary(res.data);
+//   };
+
 //   useEffect(() => {
 //     fetchExpenses();
+//     fetchSummary();
 //   }, [filterCategory, filterMonth]);
 
-//   // Handle form input
+//   // Form handling
 //   const handleChange = (e) => {
 //     setForm({ ...form, [e.target.name]: e.target.value });
 //   };
 
-//   // Add or Update expense
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 
@@ -68,7 +81,7 @@
 //       await axios.put(`${API_URL}/${editingId}`, form);
 //       setEditingId(null);
 //     } else {
-//       await axios.post(API_URL, knownFormData());
+//       await axios.post(API_URL, form);
 //     }
 
 //     setForm({
@@ -79,16 +92,9 @@
 //     });
 
 //     fetchExpenses();
+//     fetchSummary();
 //   };
 
-//   const knownFormData = () => ({
-//     amount: form.amount,
-//     description: form.description,
-//     category: form.category,
-//     date: form.date,
-//   });
-
-//   // Edit
 //   const handleEdit = (expense) => {
 //     setEditingId(expense.id);
 //     setForm({
@@ -99,18 +105,18 @@
 //     });
 //   };
 
-//   // Delete
 //   const handleDelete = async (id) => {
 //     await axios.delete(`${API_URL}/${id}`);
 //     fetchExpenses();
+//     fetchSummary();
 //   };
 
 //   return (
-//     <div style={{ maxWidth: "800px", margin: "auto", padding: "20px" }}>
+//     <div style={{ maxWidth: "900px", margin: "auto", padding: "20px" }}>
 //       <h2>💰 Expense Tracker</h2>
 
-//       {/* 🔹 Add / Edit Form */}
-//       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+//       {/* Add / Edit Form */}
+//       <form onSubmit={handleSubmit}>
 //         <input
 //           type="number"
 //           name="amount"
@@ -119,8 +125,6 @@
 //           onChange={handleChange}
 //           required
 //         />
-//         <br />
-
 //         <input
 //           type="text"
 //           name="description"
@@ -129,8 +133,6 @@
 //           onChange={handleChange}
 //           required
 //         />
-//         <br />
-
 //         <select
 //           name="category"
 //           value={form.category}
@@ -140,8 +142,6 @@
 //             <option key={cat}>{cat}</option>
 //           ))}
 //         </select>
-//         <br />
-
 //         <input
 //           type="date"
 //           name="date"
@@ -149,14 +149,14 @@
 //           onChange={handleChange}
 //           required
 //         />
-//         <br />
-
 //         <button type="submit">
 //           {editingId ? "Update Expense" : "Add Expense"}
 //         </button>
 //       </form>
 
-//       {/* 🔹 Filters */}
+//       <hr />
+
+//       {/* Filters */}
 //       <h4>Filters</h4>
 //       <select
 //         value={filterCategory}
@@ -176,10 +176,29 @@
 
 //       <hr />
 
-//       {/* 🔹 Expense List */}
+//       {/* Monthly Summary */}
+//       {summary && (
+//         <>
+//           <h3>📊 Summary for {summary.month}</h3>
+//           <p>Total Spent: ₹{summary.total}</p>
+//           <p>Expenses Count: {summary.expenseCount}</p>
+
+//           <h4>By Category</h4>
+//           <ul>
+//             {summary.byCategory.map((c) => (
+//               <li key={c.category}>
+//                 {c.category} — ₹{c.amount} ({c.percentage}%)
+//               </li>
+//             ))}
+//           </ul>
+//           <hr />
+//         </>
+//       )}
+
+//       {/* Expense List */}
 //       <ul>
 //         {expenses.map((e) => (
-//           <li key={e.id} style={{ marginBottom: "10px" }}>
+//           <li key={e.id}>
 //             {e.date} — <b>{e.description}</b> — {e.category} — ₹{e.amount}
 //             <br />
 //             <button onClick={() => handleEdit(e)}>Edit</button>{" "}
@@ -208,6 +227,58 @@ const CATEGORIES = [
   "Other",
 ];
 
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "#1e1e1e",
+    padding: "40px 0",
+    fontFamily: "Segoe UI, sans-serif",
+  },
+  container: {
+    maxWidth: "900px",
+    margin: "auto",
+  },
+  title: {
+    textAlign: "center",
+    color: "#fff",
+    marginBottom: "30px",
+  },
+  card: {
+    background: "#ffffff",
+    borderRadius: "10px",
+    padding: "20px",
+    marginBottom: "25px",
+    color: "#222",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+  },
+  sectionTitle: {
+    marginBottom: "15px",
+    color: "#111",
+  },
+  input: {
+    padding: "10px",
+    marginRight: "10px",
+    marginBottom: "10px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+  },
+  button: {
+    padding: "8px 16px",
+    borderRadius: "6px",
+    border: "none",
+    background: "#000",
+    color: "#fff",
+    cursor: "pointer",
+    marginRight: "8px",
+  },
+  listItem: {
+    marginBottom: "15px",
+    paddingBottom: "10px",
+    color: "#222",
+    borderBottom: "1px solid #eee",
+  },
+};
+
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -220,41 +291,27 @@ function App() {
   });
 
   const [editingId, setEditingId] = useState(null);
-
-  // Filters
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterMonth, setFilterMonth] = useState("");
 
-  // Fetch expenses (with filters)
   const fetchExpenses = async () => {
     let url = API_URL;
     const params = [];
 
-    if (filterCategory !== "All") {
-      params.push(`category=${filterCategory}`);
-    }
-    if (filterMonth) {
-      params.push(`month=${filterMonth}`);
-    }
-
-    if (params.length > 0) {
-      url += "?" + params.join("&");
-    }
+    if (filterCategory !== "All") params.push(`category=${filterCategory}`);
+    if (filterMonth) params.push(`month=${filterMonth}`);
+    if (params.length) url += "?" + params.join("&");
 
     const res = await axios.get(url);
     setExpenses(res.data.expenses);
   };
 
-  // Fetch summary
   const fetchSummary = async () => {
     if (!filterMonth) {
       setSummary(null);
       return;
     }
-
-    const res = await axios.get(
-      `${API_URL}/summary?month=${filterMonth}`
-    );
+    const res = await axios.get(`${API_URL}/summary?month=${filterMonth}`);
     setSummary(res.data);
   };
 
@@ -263,10 +320,8 @@ function App() {
     fetchSummary();
   }, [filterCategory, filterMonth]);
 
-  // Form handling
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -289,14 +344,9 @@ function App() {
     fetchSummary();
   };
 
-  const handleEdit = (expense) => {
-    setEditingId(expense.id);
-    setForm({
-      amount: expense.amount,
-      description: expense.description,
-      category: expense.category,
-      date: expense.date,
-    });
+  const handleEdit = (exp) => {
+    setEditingId(exp.id);
+    setForm(exp);
   };
 
   const handleDelete = async (id) => {
@@ -306,100 +356,65 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: "900px", margin: "auto", padding: "20px" }}>
-      <h2>💰 Expense Tracker</h2>
+    <div style={styles.page}>
+      <div style={styles.container}>
+        <h1 style={styles.title}>💰 Expense Tracker</h1>
 
-      {/* Add / Edit Form */}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="number"
-          name="amount"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          required
-        />
-        <select
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-        >
-          {CATEGORIES.slice(1).map((cat) => (
-            <option key={cat}>{cat}</option>
-          ))}
-        </select>
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">
-          {editingId ? "Update Expense" : "Add Expense"}
-        </button>
-      </form>
-
-      <hr />
-
-      {/* Filters */}
-      <h4>Filters</h4>
-      <select
-        value={filterCategory}
-        onChange={(e) => setFilterCategory(e.target.value)}
-      >
-        {CATEGORIES.map((cat) => (
-          <option key={cat}>{cat}</option>
-        ))}
-      </select>
-
-      <input
-        type="month"
-        value={filterMonth}
-        onChange={(e) => setFilterMonth(e.target.value)}
-        style={{ marginLeft: "10px" }}
-      />
-
-      <hr />
-
-      {/* Monthly Summary */}
-      {summary && (
-        <>
-          <h3>📊 Summary for {summary.month}</h3>
-          <p>Total Spent: ₹{summary.total}</p>
-          <p>Expenses Count: {summary.expenseCount}</p>
-
-          <h4>By Category</h4>
-          <ul>
-            {summary.byCategory.map((c) => (
-              <li key={c.category}>
-                {c.category} — ₹{c.amount} ({c.percentage}%)
-              </li>
-            ))}
-          </ul>
-          <hr />
-        </>
-      )}
-
-      {/* Expense List */}
-      <ul>
-        {expenses.map((e) => (
-          <li key={e.id}>
-            {e.date} — <b>{e.description}</b> — {e.category} — ₹{e.amount}
+        {/* Add Expense */}
+        <div style={styles.card}>
+          <h3 style={styles.sectionTitle}>
+            {editingId ? "Edit Expense" : "Add Expense"}
+          </h3>
+          <form onSubmit={handleSubmit}>
+            <input style={styles.input} type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} required />
+            <input style={styles.input} name="description" placeholder="Description" value={form.description} onChange={handleChange} required />
+            <select style={styles.input} name="category" value={form.category} onChange={handleChange}>
+              {CATEGORIES.slice(1).map((c) => <option key={c}>{c}</option>)}
+            </select>
+            <input style={styles.input} type="date" name="date" value={form.date} onChange={handleChange} required />
             <br />
-            <button onClick={() => handleEdit(e)}>Edit</button>{" "}
-            <button onClick={() => handleDelete(e.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+            <button style={styles.button}>{editingId ? "Update" : "Add"}</button>
+          </form>
+        </div>
+
+        {/* Filters */}
+        <div style={styles.card}>
+          <h3 style={styles.sectionTitle}>Filters</h3>
+          <select style={styles.input} value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+          </select>
+          <input style={styles.input} type="month" value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)} />
+        </div>
+
+        {/* Summary */}
+        {summary && (
+          <div style={styles.card}>
+            <h3 style={styles.sectionTitle}>📊 Summary ({summary.month})</h3>
+            <p><b>Total Spent:</b> ₹{summary.total}</p>
+            <p><b>Expenses:</b> {summary.expenseCount}</p>
+            <ul>
+              {summary.byCategory.map((c) => (
+                <li key={c.category}>
+                  {c.category} — ₹{c.amount} ({c.percentage}%)
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Expense List */}
+        <div style={styles.card}>
+          <h3 style={styles.sectionTitle}>Expenses</h3>
+          {expenses.map((e) => (
+            <div key={e.id} style={styles.listItem}>
+              {e.date} — <b>{e.description}</b> — {e.category} — ₹{e.amount}
+              <br />
+              <button style={styles.button} onClick={() => handleEdit(e)}>Edit</button>
+              <button style={styles.button} onClick={() => handleDelete(e.id)}>Delete</button>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -87,10 +87,18 @@ app.put("/api/expenses/:id", (req, res) => {
     return res.status(404).json({ message: "Expense not found" });
   }
 
+//   expenses[index] = {
+//     ...expenses[index],
+//     ...req.body,
+//   };
   expenses[index] = {
-    ...expenses[index],
-    ...req.body,
-  };
+  ...expenses[index],
+  amount: Number(req.body.amount),
+  description: req.body.description,
+  category: req.body.category,
+  date: req.body.date,
+};
+
 
   res.json(expenses[index]);
 });
