@@ -58,29 +58,33 @@ expense-tracker/
 
 ---
 
-## ▶️ How to Run the Project Locally
+## How to Run the Project Locally
 
-### 1️⃣ Start Backend
+### Start Backend
 ```bash
 cd backend
 npm install
 node index.js
+```
 Backend runs on:http://localhost:5000
-Start Frontend
+###  Start Frontend
+```bash
 cd frontend
 npm install
 npm run dev
+```
 Frontend runs on:http://localhost:5173
-API Endpoints
+###  API Endpoints
+
 Add Expense
 POST /api/expenses
 List Expenses (with filters)
 GET /api/expenses?category=Food&month=2025-12
-Update Expense
+###  Update Expense
 PUT /api/expenses/:id
-Delete Expense
+### Delete Expense
 DELETE /api/expenses/:id
-Monthly Summary
+### Monthly Summary
 GET /api/expenses/summary?month=2025-12
 
 Design Decisions
@@ -117,3 +121,4 @@ Run:
 git add README.md
 git commit -m "Add project README"
 git push
+```
