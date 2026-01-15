@@ -213,6 +213,16 @@
 // export default App;
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 const API_URL = "http://localhost:5000/api/expenses";
 
@@ -401,6 +411,32 @@ function App() {
             </ul>
           </div>
         )}
+        {summary && summary.byCategory.length > 0 && (
+  <div style={styles.card}>
+    <h3 style={styles.sectionTitle}>📈 Category Breakdown</h3>
+
+    <Pie
+      data={{
+        labels: summary.byCategory.map((c) => c.category),
+        datasets: [
+          {
+            data: summary.byCategory.map((c) => c.amount),
+            backgroundColor: [
+              "#4CAF50",
+              "#2196F3",
+              "#FF9800",
+              "#9C27B0",
+              "#F44336",
+              "#00BCD4",
+              "#795548",
+            ],
+          },
+        ],
+      }}
+    />
+  </div>
+)}
+
 
         {/* Expense List */}
         <div style={styles.card}>
