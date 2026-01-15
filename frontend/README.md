@@ -1,16 +1,119 @@
-# React + Vite
+# 💰 Expense Tracker – Full Stack Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple full-stack Expense Tracker application that allows users to add, edit, delete, and filter expenses, and view monthly spending summaries with category-wise breakdown.
 
-Currently, two official plugins are available:
+This project was built as an **intern-level full-stack assignment**, focusing on clean REST APIs and a functional React frontend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Backend
+- Add expense
+- List expenses with category & month filters
+- Update expense
+- Delete expense
+- Monthly spending summary
+- Category-wise breakdown
 
-## Expanding the ESLint configuration
+### Frontend
+- Add / Edit / Delete expenses
+- Filter expenses by category and month
+- Monthly summary view
+- Category breakdown list
+- Responsive and simple UI
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧱 Tech Stack
+
+### Frontend
+- React.js (Vite)
+- Axios
+- CSS
+
+### Backend
+- Node.js
+- Express.js
+- CORS
+
+### Database
+- In-memory data storage (for simplicity and fast setup)
+
+---
+
+## 📂 Project Structure
+
+expense-tracker/
+├── backend/
+│ ├── index.js
+│ ├── package.json
+│
+├── frontend/
+│ ├── src/
+│ ├── package.json
+│
+└── README.md
+
+
+---
+
+## ▶️ How to Run the Project Locally
+
+### 1️⃣ Start Backend
+```bash
+cd backend
+npm install
+node index.js
+Backend runs on:http://localhost:5000
+Start Frontend
+cd frontend
+npm install
+npm run dev
+Frontend runs on:http://localhost:5173
+API Endpoints
+Add Expense
+POST /api/expenses
+List Expenses (with filters)
+GET /api/expenses?category=Food&month=2025-12
+Update Expense
+PUT /api/expenses/:id
+Delete Expense
+DELETE /api/expenses/:id
+Monthly Summary
+GET /api/expenses/summary?month=2025-12
+
+Design Decisions
+
+Used in-memory storage to keep the setup lightweight and focused on functionality.
+
+Backend generates id and createdAt to ensure data integrity.
+
+Filters are implemented using query parameters for clean REST design.
+
+Modular and readable code structure for easy extension.
+
+Future Enhancements (Optional)
+
+Persistent database (MongoDB)
+
+Authentication
+
+Charts for category breakdown
+
+Export expenses to CSV
+Author
+
+Syed Naweed
+B.Tech Information Technology
+
+
+---
+
+## 🔹 STEP 6: Commit README
+
+Run:
+```bash
+git add README.md
+git commit -m "Add project README"
+git push
