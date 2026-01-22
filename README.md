@@ -56,6 +56,16 @@ expense-tracker/
 └── README.md
 
 
+## 📥 Clone and Run the Project Locally
+
+Follow the steps below to clone and run the project on your local machine.
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/SyedNaweed/expense-tracker.git
+cd expense-tracker
+```
+
 ---
 
 ## How to Run the Project Locally
